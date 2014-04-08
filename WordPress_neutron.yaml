@@ -34,11 +34,11 @@ Parameters:
     Default: 94076522-6e82-4d05-a00a-db6e33c9e360
 Mappings:
   InstanceTypeToImage:
-    m1.tiny: {Image: 'F18-i386-cfntools'}
-    m1.small: {Image: 'F18-x86_64-cfntools'}
-    m1.medium: {Image: 'F18-x86_64-cfntools'}
-    m1.large: {Image: 'F18-x86_64-cfntools'}
-    m1.xlarge: {Image: 'F18-x86_64-cfntools'}
+    m1.tiny: {Image: 'F17-i386-cfntools'}
+    m1.small: {Image: 'F17-x86_64-cfntools'}
+    m1.medium: {Image: 'F17-x86_64-cfntools'}
+    m1.large: {Image: 'F17-x86_64-cfntools'}
+    m1.xlarge: {Image: 'F17-x86_64-cfntools'}
 Resources:
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
