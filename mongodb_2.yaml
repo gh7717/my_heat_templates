@@ -1,0 +1,90 @@
+HeatTemplateFormatVersion: '2012-12-12'
+Description: 'Heat Mongodb template to support F17 with SSH key requirements'
+Parameters:
+  Key:
+    Type: String
+    Description: SSH key to connect to the servers
+    Default: mongo
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: m1.small
+    AllowedValues: [m1.tiny, m1.small, m1.medium, m1.large, m1.xlarge]
+    ConstraintDescription: must be a valid EC2 instance type.
+  Subnet:
+    Description: Name of an existing EC2 network to enable SSH access to the instances
+    Type: String
+    Default: 94076522-6e82-4d05-a00a-db6e33c9e360
+  MongoDBYumRepo:
+    Description: 'Mongo DB Yum Repo'
+    Type: String
+    Default: '[mongodb]$"\n"name=MongoDB Repository$"\n"baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/$"\n"gpgcheck=0$"\n"enabled=1'
+Mappings:
+  InstanceTypeToImage:
+    m1.tiny: {Image: 'F17-x86_64-cfntools'}
+    m1.small: {Image: 'F17-x86_64-cfntools'}
+    m1.medium: {Image: 'F17-x86_64-cfntools'}
+    m1.large: {Image: 'F17-x86_64-cfntools'}
+    m1.xlarge: {Image: 'F17-x86_64-cfntools'}
+Resources:
+  MongoDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: 'Enable access via port 27017 plus SSH access'
+      SecurityGroupIngress:
+      - IpProtocol: 'tcp'
+        FromPort: '27017'
+        ToPort: '27017'
+        CidrIp: '0.0.0.0/0'
+      - IpProtocol: 'tcp'
+        FromPort: '22'
+        ToPort : '22'
+        CidrIp : '0.0.0.0/0'
+  MongoDatabasePrimary:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              mongodb-org: []
+          #    mysql-server: []
+          #    httpd: []
+          #    wordpress: []
+          services:
+            systemd:
+              mongodb: {enabled: 'true', ensureRunning: 'true'}
+          #    httpd: {enabled: 'true', ensureRunning: 'true'}
+     
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - InstanceTypeToImage
+        - {Ref: InstanceType}
+        - Image
+      SubnetId: {Ref: Subnet}
+      InstanceType: {Ref: InstanceType}
+      KeyName: {Ref: Key}
+      SecurityGroups: [{"Ref" : "MongoDBSecurityGroup"}]
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - - '#!/bin/bash -v
+
+              '
+            - '/opt/aws/bin/cfn-init
+
+              '
+            - 'echo {Ref: MongoDBYumRepo} > /etc/yum.repos.d/mongodb.repo
+             
+              '
+Outputs:
+  WebsiteURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - http://
+        - Fn::GetAtt: [WikiDatabase, PublicIp]
+        - /wordpress
+    Description: URL for Wordpress wiki
