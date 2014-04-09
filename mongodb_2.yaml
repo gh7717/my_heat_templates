@@ -15,6 +15,17 @@ Parameters:
     Description: Name of an existing EC2 network to enable SSH access to the instances
     Type: String
     Default: 94076522-6e82-4d05-a00a-db6e33c9e360
+  VolumeSize:
+    Type: Number
+    Description: Size of the volume to be created.
+    Default: 1
+    Constraints:
+      - range: { min: 1, max: 1024 }
+        description: must be between 1 and 1024 Gb.
+  AvailabilityZone:
+    Type: String
+    Description: The Availability Zone to launch the instance.
+    Default: nova
 Mappings:
   InstanceTypeToImage:
     m1.tiny: {Image: 'F17-x86_64-cfntools'}
@@ -51,7 +62,6 @@ Resources:
             systemd:
               mongodb: {enabled: 'true', ensureRunning: 'true'}
           #    httpd: {enabled: 'true', ensureRunning: 'true'}
-     
     Properties:
       ImageId:
         Fn::FindInMap:
@@ -99,13 +109,22 @@ Resources:
             - 'chkconfig mongod on
 
               '
-
+  CinderVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: {Ref: AvailabilityZone}
+      Size: { Ref: VolumeSize} 
+  VolumeAttachment:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      VolumeId: {Ref: CinderVolume}
+      InstanceId: {Ref: MongoDatabasePrimary}
+      Device: /dev/vdc
 Outputs:
   WebsiteURL:
     Value:
       Fn::Join:
       - ''
       - - http://
-        - Fn::GetAtt: [WikiDatabase, PublicIp]
-        - /wordpress
-    Description: URL for Wordpress wiki
+        - Fn::GetAtt: [MongoDatabasePrimary, PublicIp]
+    Description: PublicIp MongoDB server
