@@ -12,7 +12,7 @@ resources:
   my_instance:
     type: OS::Nova::Server
     properties:
-      key_name: my_key
+      key_name: ubuntu
       image: F18-x86_64-cfntools
       flavor: m1.small
       networks:
