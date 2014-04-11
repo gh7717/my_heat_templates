@@ -19,3 +19,7 @@ resources:
       network_id: { 32e40af3-20aa-4284-9bae-f7c7fdb861bd}
       fixed_ips:
         - subnet_id: { 94076522-6e82-4d05-a00a-db6e33c9e360}
+outputs:
+  server1_private_ip:
+    description: IP address of server1 in private network
+    value: { get_attr: [ server1, first_address ] }
