@@ -1,25 +1,25 @@
 heat_template_version: 2013-05-23
 
-description: Simple template to 
-deploy a single compute instance
+description: Simple template to deploy a single compute instance
+
+parameters:
+  private_net_id:
+    type: string
+    description: ID of private network into which servers get deployed
+    default: 32e40af3-20aa-4284-9bae-f7c7fdb861bd
 
 resources:
   my_instance:
     type: OS::Nova::Server
     properties:
-      name: Server1
-      key_name: ubuntu
-      image: F17-x86_64-cfntools
+      key_name: my_key
+      image: F18-x86_64-cfntools
       flavor: m1.small
-      networks: 
-        - port: { get_resource: server1_port }
-  server1_port:
+      networks:
+        - port: { get_resource: server2_port }
+  server2_port:
     type: OS::Neutron::Port
     properties:
-      network_id: { 32e40af3-20aa-4284-9bae-f7c7fdb861bd}
-      fixed_ips:
-        - subnet_id: { 94076522-6e82-4d05-a00a-db6e33c9e360}
-outputs:
-  server1_private_ip:
-    description: IP address of server1 in private network
-    value: { get_attr: [ server1, first_address ] }
+      network_id: { get_param: private_net_id }
+
+
