@@ -13,7 +13,7 @@ resources:
     type: OS::Nova::Server
     properties:
       key_name: ubuntu
-      image: F18-x86_64-cfntools
+      image: F17-x86_64-cfntools
       flavor: m1.small
       networks:
         - port: { get_resource: server2_port }
