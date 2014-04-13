@@ -1,6 +1,15 @@
 HeatTemplateFormatVersion: '2012-12-12'
 Description: 'Simple template'
 Parameters:
+  KeyName:
+    Type: String
+    Default: mykey
+  InstanceType:
+    Type: String
+    Default: m1.small
+  ImageId:
+    Type: String
+    Default: fedora-17-heat
   PrivateNetId:
     Type: String
     Description: ID of private sub network into which servers get deployed
@@ -9,7 +18,7 @@ Resources:
   MyInstance:
     Type: OS::Nova::Server
     Properties:
-      ImageId: 252122d7-8c01-4eea-9dfe-56c0e8d21e2e
-      InstanceType: 2
-      KeyName: mykey
-      SubnetId: 724a09da-fd68-4bdd-80de-d6f8eafab902
+      ImageId: {Ref: ImageId}
+      InstanceType: {Ref: InstanceType}
+      KeyName: {Ref: KeyName}
+      SubnetId: {Ref: PrivateNetId }
