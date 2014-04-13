@@ -81,7 +81,7 @@ resources:
       evaluation_periods: 1
       threshold: 30
       alarm_actions:
-      - {"Fn::GetAtt": [MongoDBUpPolicy, AlarmUrl]}
+      - {Fn::GetAtt: [MongoDBUpPolicy, AlarmUrl]}
       matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
       comparison_operator: gt 
       
@@ -95,7 +95,7 @@ resources:
         evaluation_periods: 1
         threshold: 30
         alarm_actions:
-        - {"Fn::GetAtt": [MongoDBUpPolicy, AlarmUrl]}
+        - {Fn::GetAtt: [MongoDBUpPolicy, AlarmUrl]}
         matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
         comparison_operator: lt 
   
