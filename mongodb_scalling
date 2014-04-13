@@ -96,9 +96,24 @@ resources:
       MinSize: 2
       MaxSize: 5
       AvailabilityZones: nova
+
+  MongoDBUpPolicy:
+    type: AWS::AutoScaling::ScalingPolicy
+    properties:
       Cooldown: 60
-      
-      
+      AutoScalingGroupName: {Ref: MongoDBServerGroup}
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: 1
+  
+  MongoDBDownPolicy:
+    type: AWS::AutoScaling::ScalingPolicy
+    properties:
+      Cooldown: 60
+      AutoScalingGroupName: {Ref: MongoDBServerGroup}
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: -1
+  
+  
   
   CinderVolume:
     Type: AWS::EC2::Volume
