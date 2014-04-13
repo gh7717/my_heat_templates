@@ -10,6 +10,6 @@ Resources:
     Type: OS::Nova::Server
     Properties:
       KeyName: mykey
-      Image: fedora-20-heat
+      ImageId: fedora-20-heat
       InstanceType: m1.small
       SubnetID: {Ref: private_net_id}
