@@ -14,7 +14,7 @@ Parameters:
   Subnet:
     Description: Name of an existing EC2 network to enable SSH access to the instances
     Type: String
-    Default: 724a09da-fd68-4bdd-80de-d6f8eafab902
+    Default: net04__subnet
     AllowedValues: [net04__subnet]
   VolumeSize:
     Type: Number
@@ -29,11 +29,11 @@ Parameters:
     Default: nova
 Mappings:
   InstanceTypeToImage:
-    m1.tiny: {Image: 'F17-x86_64-cfntools'}
-    m1.small: {Image: 'F17-x86_64-cfntools'}
-    m1.medium: {Image: 'F17-x86_64-cfntools'}
-    m1.large: {Image: 'F17-x86_64-cfntools'}
-    m1.xlarge: {Image: 'F17-x86_64-cfntools'}
+    m1.tiny: {Image: 'ubuntu-heat'}
+    m1.small: {Image: 'ubuntu-heat'}
+    m1.medium: {Image: 'ubuntu-heat'}
+    m1.large: {Image: 'ubuntu-heat'}
+    m1.xlarge: {Image: 'ubuntu-heat'}
 Resources:
   MongoDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
