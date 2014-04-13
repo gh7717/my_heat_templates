@@ -2,9 +2,9 @@ HeatTemplateFormatVersion: '2012-12-12'
 Description: 'Simple template to deploy a singlecompute instance' 
 Parameters:
   PrivateNetId:
-   Type: String
-   Description: 'ID of private sub network into which servers get deployed'
-   Default: 724a09da-fd68-4bdd-80de-d6f8eafab902
+    Type: String
+    Description: 'ID of private sub network into which servers get deployed'
+    Default: 724a09da-fd68-4bdd-80de-d6f8eafab902
 Resources:
   MyInstance:
     Type: OS::Nova::Server
