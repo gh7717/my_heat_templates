@@ -9,6 +9,7 @@ Resources:
   MyInstance:
     Type: OS::Nova::Server
     Properties:
-      ImageId: {Ref: ImageId}
-      InstanceType: {Ref: InstanceType}
-      KeyName: {Ref: KeyName}
+      ImageId: 252122d7-8c01-4eea-9dfe-56c0e8d21e2e
+      InstanceType: 2
+      KeyName: mykey
+      SubnetId: 724a09da-fd68-4bdd-80de-d6f8eafab902
