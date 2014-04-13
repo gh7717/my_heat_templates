@@ -18,7 +18,7 @@ Resources:
   MyInstance:
     Type: OS::Nova::Server
     Properties:
-      ImageId: {Ref: ImageId}
-      InstanceType: {Ref: InstanceType}
-      KeyName: {Ref: KeyName}
-      SubnetId: {Ref: PrivateNetId }
+      ImageId: { Ref: ImageId}
+      InstanceType: { Ref: InstanceType}
+      KeyName: { Ref: KeyName}
+      SubnetId: { Ref: PrivateNetId }
