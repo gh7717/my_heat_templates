@@ -28,11 +28,11 @@ Parameters:
     Default: nova
 Mappings:
   InstanceTypeToImage:
-    m1.tiny: {Image: 'ubuntu-heat'}
-    m1.small: {Image: 'ubuntu-heat'}
-    m1.medium: {Image: 'ubuntu-heat'}
-    m1.large: {Image: 'ubuntu-heat'}
-    m1.xlarge: {Image: 'ubuntu-heat'}
+    m1.tiny: {Image: 'Ubuntu-heat'}
+    m1.small: {Image: 'Ubuntu-heat'}
+    m1.medium: {Image: 'Ubuntu-heat'}
+    m1.large: {Image: 'Ubuntu-heat'}
+    m1.xlarge: {Image: 'Ubuntu-heat'}
 Resources:
   MongoDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
