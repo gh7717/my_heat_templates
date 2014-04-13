@@ -4,7 +4,7 @@ Parameters:
   Key:
     Type: String
     Description: SSH key to connect to the servers
-    Default: mongo
+    Default: mykey
   InstanceType:
     Description: EC2 instance type
     Type: String
