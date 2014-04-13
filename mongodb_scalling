@@ -46,7 +46,60 @@ resources:
         ToPort : '22'
         CidrIp : '0.0.0.0/0'
         
-  MongoDatabasePrimary:
+  MongoDBServerGroup:
+    type: AWS::AutoScaling::AutoScalingGroup
+    properties:
+      MinSize: 2
+      MaxSize: 5
+      AvailabilityZones: nova
+      LaunchConfigurationName: {Ref: MongoDB}
+      
+  
+  MongoDBUpPolicy:
+    type: AWS::AutoScaling::ScalingPolicy
+    properties:
+      Cooldown: 60
+      AutoScalingGroupName: {Ref: MongoDBServerGroup}
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: 1
+  
+  MongoDBDownPolicy:
+    type: AWS::AutoScaling::ScalingPolicy
+    properties:
+      Cooldown: 60
+      AutoScalingGroupName: {Ref: MongoDBServerGroup}
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: -1
+  
+  CpuAlarmHigh:
+    type: OS::Ceilometer::Alarm
+    properties: 
+      description: Scale-up if the average CPU > 50% for 1 minute
+      meter_name: cpu_util
+      statistic: avg
+      period: 30
+      evaluation_periods: 1
+      threshold: 30
+      alarm_actions:
+      - {"Fn::GetAtt": [MongoDBUpPolicy, AlarmUrl]}
+      matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
+      comparison_operator: gt 
+      
+    CpuAlarmHigh:
+      type: OS::Ceilometer::Alarm
+      properties: 
+        description: Scale-up if the average CPU < 50% for 1 minute
+        meter_name: cpu_util
+        statistic: avg
+        period: 30
+        evaluation_periods: 1
+        threshold: 30
+        alarm_actions:
+        - {"Fn::GetAtt": [MongoDBUpPolicy, AlarmUrl]}
+        matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
+        comparison_operator: lt 
+  
+  MongoDB:
     Type: AWS::AutoScaling::LaunchConfiguration
     Metadata:
       AWS::CloudFormation::Init:
@@ -89,50 +142,6 @@ resources:
               '
             - 'chkconfig mongod on
               '
-                          
-  
-  MongoDBServerGroup:
-    type: AWS::AutoScaling::AutoScalingGroup
-    properties:
-      MinSize: 2
-      MaxSize: 5
-      AvailabilityZones: nova
-      LaunchConfigurationName: {Ref: MongoDB}
-      
-      
-
-  MongoDBUpPolicy:
-    type: AWS::AutoScaling::ScalingPolicy
-    properties:
-      Cooldown: 60
-      AutoScalingGroupName: {Ref: MongoDBServerGroup}
-      AdjustmentType: ChangeInCapacity
-      ScalingAdjustment: 1
-  
-  MongoDBDownPolicy:
-    type: AWS::AutoScaling::ScalingPolicy
-    properties:
-      Cooldown: 60
-      AutoScalingGroupName: {Ref: MongoDBServerGroup}
-      AdjustmentType: ChangeInCapacity
-      ScalingAdjustment: -1
-  
-  CpuAlarmHigh:
-    type: AWS::CloudWatch::Alarm
-    properties: 
-      EvaluationPeriods: 1
-      Statistic: Average
-      Threshold: 10
-      AlarmDescription: "Alarm if CPU too high or metric disappears indicating instance is down"
-      Period: 60
-      AlarmActions: { "Ref": "MongoDBUpPolicy" }
-      Namespace: nova
-      Dimensions: [ {
-         Name: AutoScalingGroupName
-         Value: { Ref: asGroup }
-      } ]
-      ComparisonOperator: GreaterThanThreshold,
-      MetricName: CPUUtilization
       
   CinderVolume:
     Type: AWS::EC2::Volume
