@@ -26,14 +26,10 @@ parameters:
     Type: String
     Description: The Availability Zone to launch the instance.
     Default: nova
-
-mappings:
-  InstanceTypeToImage:
-    m1.tiny: {Image: 'fedora-17-heat'}
-    m1.small: {Image: 'fedora-17-heat'}
-    m1.medium: {Image: 'fedora-17-heat'}
-    m1.large: {Image: 'fedora-17-heat'}
-    m1.xlarge: {Image: 'fedora-17-heat'}
+  ImageId:
+    Type: String
+    Description: Image name 
+    Default: fedora-17-heat
 
 resources:
   MongoDBSecurityGroup:
@@ -63,11 +59,7 @@ resources:
               mongodb: {enabled: 'true', ensureRunning: 'true'}
               
     Properties:
-      ImageId:
-        Fn::FindInMap:
-        - InstanceTypeToImage
-        - {Ref: InstanceType}
-        - Image
+      ImageId: {Ref: ImageId}
       SubnetId: {Ref: Subnet}
       InstanceType: {Ref: InstanceType}
       KeyName: {Ref: Key}
