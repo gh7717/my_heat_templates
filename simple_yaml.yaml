@@ -7,7 +7,7 @@ Parameters:
    Default: 724a09da-fd68-4bdd-80de-d6f8eafab902
 Resources:
   my_instance:
-    Type: OS::Nova::Server
+    Type: AWS::EC2::Instance
     Properties:
       KeyName: mykey
       ImageID: fedora-20-heat
