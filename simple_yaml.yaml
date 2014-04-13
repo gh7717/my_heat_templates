@@ -1,6 +1,5 @@
 HeatTemplateFormatVersion: '2012-12-12'
-Description: 'Simple template to deploy a single
-compute instance' 
+Description: 'Simple template to deploy a singlecompute instance' 
 Parameters:
   private_net_id:
    Type: String
