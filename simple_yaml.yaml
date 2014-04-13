@@ -10,7 +10,7 @@ Parameters:
   ImageId:
     Type: String
     Default: fedora-17-heat
-  PrivateNetId:
+  SubnetId:
     Type: String
     Description: ID of private sub network into which servers get deployed
     Default: 724a09da-fd68-4bdd-80de-d6f8eafab902
@@ -21,4 +21,4 @@ Resources:
       ImageId: { Ref: ImageId}
       InstanceType: { Ref: InstanceType}
       KeyName: { Ref: KeyName}
-      SubnetId: { Ref: PrivateNetId }
+      SubnetId: { Ref: SubnetId }
