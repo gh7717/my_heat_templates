@@ -1,10 +1,10 @@
-HeatTemplateFormatVersion: '2012-12-12'
-Description: 'Heat Mongodb template to support F17 with SSH key requirements'
-Parameters:
+heat_template_version: 2013-05-23
+description: Heat Mongodb template to support F17 with SSH key requirements
+parameters:
   Key:
-    Type: String
-    Description: SSH key to connect to the servers
-    Default: mykey
+    type: String
+    description: SSH key to connect to the servers
+    default: mykey
   InstanceType:
     Description: EC2 instance type
     Type: String
@@ -18,7 +18,7 @@ Parameters:
   VolumeSize:
     Type: Number
     Description: Size of the volume to be created.
-    Default: 1
+    Default: 10
     Constraints:
       - range: { min: 1, max: 1024 }
         description: must be between 1 and 1024 Gb.
@@ -26,17 +26,19 @@ Parameters:
     Type: String
     Description: The Availability Zone to launch the instance.
     Default: nova
-Mappings:
+
+mappings:
   InstanceTypeToImage:
     m1.tiny: {Image: 'fedora-17-heat'}
     m1.small: {Image: 'fedora-17-heat'}
     m1.medium: {Image: 'fedora-17-heat'}
     m1.large: {Image: 'fedora-17-heat'}
     m1.xlarge: {Image: 'fedora-17-heat'}
-Resources:
+
+resources:
   MongoDBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
+    type: AWS::EC2::SecurityGroup
+    properties:
       GroupDescription: 'Enable access via port 27017 plus SSH access'
       SecurityGroupIngress:
       - IpProtocol: 'tcp'
@@ -47,6 +49,7 @@ Resources:
         FromPort: '22'
         ToPort : '22'
         CidrIp : '0.0.0.0/0'
+        
   MongoDatabasePrimary:
     Type: AWS::EC2::Instance
     Metadata:
@@ -55,13 +58,10 @@ Resources:
           packages:
             yum:
               mongodb-org: []
-          #    mysql-server: []
-          #    httpd: []
-          #    wordpress: []
           services:
             systemd:
               mongodb: {enabled: 'true', ensureRunning: 'true'}
-          #    httpd: {enabled: 'true', ensureRunning: 'true'}
+              
     Properties:
       ImageId:
         Fn::FindInMap:
@@ -77,50 +77,42 @@ Resources:
           Fn::Join: 
           - ''
           - - '#!/bin/bash -v
-              
               '
             - 'cat <<EOF > /etc/yum.repos.d/mongodb.repo
-
               '
-            - ' [mongodb]
-
+            - '[mongodb]
               '
             - 'name=MongoDB Repository
-  
               '
             - 'baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
-  
               '
             - 'gpgcheck=0
-  
               '
             - 'enabled=1
-              
               '
             - 'EOF
-              
               '
             - 'yum -y install mongodb-org
-              
               '
             - '/etc/init.d/mongod start
-              
               '
             - 'chkconfig mongod on
-
               '
+              
   CinderVolume:
     Type: AWS::EC2::Volume
     Properties:
       AvailabilityZone: {Ref: AvailabilityZone}
       Size: { Ref: VolumeSize} 
+  
   VolumeAttachment:
     Type: AWS::EC2::VolumeAttachment
     Properties:
       VolumeId: {Ref: CinderVolume}
       InstanceId: {Ref: MongoDatabasePrimary}
       Device: /dev/vdc
-Outputs:
+      
+outputs:
   WebsiteURL:
     Value:
       Fn::Join:
