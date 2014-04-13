@@ -113,6 +113,23 @@ resources:
       AdjustmentType: ChangeInCapacity
       ScalingAdjustment: -1
   
+  CpuAlarmHigh:
+    type: AWS::AutoScaling::Trigger
+    properties: 
+      AutoScalingGroupName: {Ref: MongoDBServerGroup}
+      BreachDuration: 60
+      Dimensions: 
+      statistic: avg
+      LowerThreshold: 40
+      UpperThreshold: 50
+      MetricName: cpu_util
+      Namespace:
+      Period:
+      Statistic:
+      
+      
+      
+      
   
   
   CinderVolume:
