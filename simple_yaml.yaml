@@ -4,7 +4,7 @@ Parameters:
   private_net_id:
     Type: String
     Description: ID of private network into which servers get deployed
-    Default: 724a09da-fd68-4bdd-80de-d6f8eafab902
+    Default: a70221a2-0bf7-49fa-baac-d1e6a4f28bcd
 Resources:
   my_instance:
     Type: OS::Nova::Server
