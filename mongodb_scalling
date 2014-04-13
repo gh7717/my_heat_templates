@@ -89,51 +89,17 @@ resources:
               '
             - 'chkconfig mongod on
               '
-              
-  MongoDatabaseSlave:
-    Type: AWS::EC2::Instance
-    Metadata:
-      AWS::CloudFormation::Init:
-        config:
-          packages:
-            yum:
-              mongodb-org: []
-          services:
-            systemd:
-              mongodb: {enabled: 'true', ensureRunning: 'true'}
-    Properties:
-      ImageId: {Ref: ImageId}
-      SubnetId: {Ref: Subnet}
-      InstanceType: {Ref: InstanceType}
-      KeyName: {Ref: Key}
-      SecurityGroups: [{"Ref" : "MongoDBSecurityGroup"}]
-      UserData:
-        Fn::Base64:
-          Fn::Join: 
-          - ''
-          - - '#!/bin/bash -v
-              '
-            - 'cat <<EOF > /etc/yum.repos.d/mongodb.repo
-              '
-            - '[mongodb]
-              '
-            - 'name=MongoDB Repository
-              '
-            - 'baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
-              '
-            - 'gpgcheck=0
-              '
-            - 'enabled=1
-              '
-            - 'EOF
-              '
-            - 'yum -y install mongodb-org
-              '
-            - '/etc/init.d/mongod start
-              '
-            - 'chkconfig mongod on
-              '            
-              
+                          
+  MongoDBServerGroup:
+    type: AWS::AutoScaling::AutoScalingGroup
+    properties:
+      MinSize: 2
+      MaxSize: 5
+      AvailabilityZones: nova
+      Cooldown: 60
+      
+      
+  
   CinderVolume:
     Type: AWS::EC2::Volume
     Properties:
