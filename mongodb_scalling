@@ -85,7 +85,7 @@ resources:
       matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
       comparison_operator: gt 
       
-    CpuAlarmHigh:
+    CpuAlarmLow:
       type: OS::Ceilometer::Alarm
       properties: 
         description: Scale-up if the average CPU < 50% for 1 minute
