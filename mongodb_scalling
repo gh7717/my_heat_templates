@@ -74,12 +74,12 @@ resources:
   CpuAlarmHigh:
     type: OS::Ceilometer::Alarm
     properties: 
-      description: Scale-up if the average CPU > 50% for 1 minute
+      description: Scale-up if the average CPU > 75% for 1 minute
       meter_name: cpu_util
       statistic: avg
       period: 30
       evaluation_periods: 1
-      threshold: 30
+      threshold: 75
       alarm_actions:
       - {Fn::GetAtt: [MongoDBUpPolicy, AlarmUrl]}
       matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
@@ -93,7 +93,7 @@ resources:
         statistic: avg
         period: 30
         evaluation_periods: 1
-        threshold: 30
+        threshold: 50
         alarm_actions:
         - {Fn::GetAtt: [MongoDBUpPolicy, AlarmUrl]}
         matching_metadata: { metadata.user_metadata.server_group: MongoDBServerGroup }
